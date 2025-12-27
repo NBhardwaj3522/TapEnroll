@@ -1,3 +1,35 @@
+export const dynamic = "force-dynamic";export const dynamic = "force-dynamic";
+
+import { supabase } from "@/lib/supabase";
+import { headers } from "next/headers";
+
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: { store?: string; product?: string };
+}) {
+  const store = searchParams.store ?? null;
+  const product = searchParams.product ?? null;
+
+  const userAgent = headers().get("user-agent");
+
+  // This WILL now run on every request
+  if (store || product) {
+    await supabase.from("tap_events").insert({
+      store_code: store,
+      product_code: product,
+      user_agent: userAgent,
+    });
+  }
+
+  return (
+    <main style={{ padding: "2rem", fontFamily: "system-ui, sans-serif" }}>
+      <h1>TapEnroll – Grocery Pilot</h1>
+      <p>Thanks for tapping.</p>
+    </main>
+  );
+}
+
 import { supabase } from "@/lib/supabase";
 import { headers } from "next/headers";
 

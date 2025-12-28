@@ -17,7 +17,7 @@ export default async function Home({
   let insertResult: string = "SKIPPED";
 
   try {
-    if (process.env.VERCEL && (store || product) {
+    if (process.env.VERCEL && (store || product)) {
       const { error } = await supabase.from("tap_events").insert({
         store_code: store,
         product_code: product,

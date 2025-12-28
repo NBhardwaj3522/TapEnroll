@@ -1,10 +1,8 @@
 export const dynamic = "force-dynamic";
-export const runtime = "nodejs";
 
-import { supabase } from "./lib/supabase";
 import { headers } from "next/headers";
 
-export default async function Home({
+export default function Home({
   searchParams,
 }: {
   searchParams: { store?: string; product?: string };
@@ -14,37 +12,30 @@ export default async function Home({
 
   const userAgent = headers().get("user-agent");
 
-  let insertResult: string = "SKIPPED";
-
-  try {
-    if (process.env.VERCEL && (store || product)) {
-      const { error } = await supabase.from("tap_events").insert({
-        store_code: store,
-        product_code: product,
-        user_agent: userAgent,
-      });
-
-      if (error) {
-        insertResult = `SUPABASE ERROR: ${error.message}`;
-      } else {
-        insertResult = "INSERT SUCCESS";
-      }
-    } else {
-      insertResult = "NO STORE OR PRODUCT PARAM";
-    }
-  } catch (err: any) {
-    insertResult = `EXCEPTION: ${err.message}`;
-  }
-
   return (
     <main style={{ padding: "2rem", fontFamily: "system-ui, sans-serif" }}>
-      <h1>TapEnroll – Debug Mode</h1>
+      <h1>TapEnroll</h1>
 
-      <p><strong>STORE PARAM:</strong> {store ?? "NONE"}</p>
-      <p><strong>PRODUCT PARAM:</strong> {product ?? "NONE"}</p>
+      <p><strong>STORE:</strong> {store ?? "NONE"}</p>
+      <p><strong>PRODUCT:</strong> {product ?? "NONE"}</p>
       <p><strong>USER AGENT:</strong> {userAgent ?? "NONE"}</p>
-      <p><strong>SUPABASE INSERT:</strong> {insertResult}</p>
-      <p><strong>RENDERED AT:</strong> {new Date().toISOString()}</p>
+
+      {/* Runtime-only call */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+            fetch("/api/tap", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                store: ${JSON.stringify(store)},
+                product: ${JSON.stringify(product)}
+              })
+            });
+          `,
+        }}
+      />
     </main>
   );
 }
+

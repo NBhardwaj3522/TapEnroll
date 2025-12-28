@@ -1,4 +1,5 @@
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 import { supabase } from "./lib/supabase";
 import { headers } from "next/headers";
@@ -13,10 +14,10 @@ export default async function Home({
 
   const userAgent = headers().get("user-agent");
 
-  let insertResult: string = "NOT ATTEMPTED";
+  let insertResult: string = "SKIPPED";
 
   try {
-    if (store || product) {
+    if (process.env.VERCEL && (store || product) {
       const { error } = await supabase.from("tap_events").insert({
         store_code: store,
         product_code: product,

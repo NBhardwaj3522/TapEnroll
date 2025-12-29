@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/app/lib/supabase";
+import { supabase } from "../../lib/supabase";
 import { headers } from "next/headers";
-import { sendSMS } from "@/app/lib/sms";
+import { sendSMS } from "../../lib/sms";
 
 export async function POST(req: Request) {
   // 1️⃣ Parse request

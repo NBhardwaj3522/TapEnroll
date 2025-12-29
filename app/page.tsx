@@ -1,20 +1,19 @@
 "use client";
+
 export const dynamic = "force-dynamic";
 
-import { useState } from "react";
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 
-export default function Home() {
+function EnrollForm() {
   const searchParams = useSearchParams();
   const store = searchParams.get("store");
 
   const [phone, setPhone] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   async function submit() {
-    setLoading(true);
-
     await fetch("/api/enroll", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -22,49 +21,37 @@ export default function Home() {
     });
 
     setSubmitted(true);
-    setLoading(false);
   }
 
   if (submitted) {
-    return (
-      <main style={{ padding: "2rem", textAlign: "center" }}>
-        <h2>🎉 You’re in!</h2>
-        <p>Your reward has been sent to your phone.</p>
-      </main>
-    );
+    return <h2>Thanks! Check your phone 📱</h2>;
   }
 
   return (
-    <main style={{ padding: "2rem", maxWidth: 400, margin: "0 auto" }}>
-      <h1>Join Our Loyalty Program</h1>
-      <p>Get exclusive offers sent straight to your phone.</p>
+    <div style={{ padding: 32 }}>
+      <h1>Join our loyalty program</h1>
+      <p>Enter your phone number to get your reward.</p>
 
       <input
         type="tel"
-        placeholder="Phone number"
+        placeholder="+1XXXXXXXXXX"
         value={phone}
         onChange={(e) => setPhone(e.target.value)}
-        style={{ width: "100%", padding: "12px", fontSize: "16px" }}
+        style={{ padding: 12, width: "100%", marginBottom: 12 }}
       />
 
-      <button
-        onClick={submit}
-        disabled={loading || !phone}
-        style={{
-          marginTop: "1rem",
-          width: "100%",
-          padding: "12px",
-          fontSize: "16px",
-        }}
-      >
-        {loading ? "Sending..." : "Get My Reward"}
+      <button onClick={submit} style={{ padding: 12, width: "100%" }}>
+        Get My Reward
       </button>
+    </div>
+  );
+}
 
-      <p style={{ fontSize: 12, marginTop: 12 }}>
-        By joining, you agree to receive recurring automated promotional SMS.
-        Msg & data rates may apply.
-      </p>
-    </main>
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading…</div>}>
+      <EnrollForm />
+    </Suspense>
   );
 }
 

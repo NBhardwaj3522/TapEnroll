@@ -10,6 +10,8 @@ export async function POST(req: Request) {
   console.log("ENROLL BODY", body);
 
   const { phone, store } = body;
+  const userAgent = req.headers.get("user-agent");
+
 
   if (!phone) {
     return NextResponse.json(

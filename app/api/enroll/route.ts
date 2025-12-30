@@ -10,7 +10,7 @@ export async function POST(req: Request) {
   console.log("ENROLL BODY", body);
 
   const { phone, store } = body;
-  const userAgent = req.headers.get("user-agent");
+  const userAgent = req.headers.get("user-agent"); || null;
 
 
   if (!phone) {
@@ -39,7 +39,6 @@ export async function POST(req: Request) {
     store_code: store,
     member_id: member.id,
      user_agent: userAgent,
-
  });
 
   // 4️⃣ SEND THE SMS  ← ← ← THIS IS WHERE IT GOES

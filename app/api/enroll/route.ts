@@ -3,10 +3,13 @@ import { supabase } from "../_lib/supabase";
 import { headers } from "next/headers";
 import { sendSMS } from "../_lib/sms";
 
-export async function POST(req: Request) {
   // 1️⃣ Parse request
-  const { phone, store } = await req.json();
-  const userAgent = headers().get("user-agent");
+
+export async function POST(req: Request) {
+  const body = await req.json();
+  console.log("ENROLL BODY", body);
+
+  const { phone, store } = body;
 
   if (!phone) {
     return NextResponse.json(

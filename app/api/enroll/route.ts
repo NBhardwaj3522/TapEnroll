@@ -38,7 +38,7 @@ export async function POST(req: Request) {
   await supabase.from("tap_events").insert({
     store_code: store,
     member_id: member.id,
-     user_agent: userAgent,
+    user_agent: req.headers.get("user-agent"),
  });
 
   // 4️⃣ SEND THE SMS  ← ← ← THIS IS WHERE IT GOES

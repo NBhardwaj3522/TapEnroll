@@ -3,6 +3,8 @@ import { supabase } from "../_lib/supabase";
 import { sendSMS } from "../_lib/sms";
 
 export async function POST(req: Request) {
+  const userAgent = null; 
+ 
   const body = await req.json();
   const { phone, store } = body;
 
